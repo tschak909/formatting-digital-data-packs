@@ -1,0 +1,2129 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage[colorlinks=true]{hyperref}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation 2em
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 2
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Formatting ADAM Digital Data Packs Using MAME's 'castool'
+\end_layout
+
+\begin_layout Author
+Thomas Cherryhomes <thom.cherryhomes@gmail.com>
+\end_layout
+
+\begin_layout Abstract
+This document shows the process of applying formatting to suitable media
+ without needing a donor tape to copy the formatting information.
+ This process can be applied to either first-party media or to third-party
+ media after the appropriate mechanical modifications are made to the cassette
+ tape casing.
+ This method requires only software to generate the required signal, and
+ a suitable recording device to transfer the resulting signal to tape.
+ Once transferred, the resulting tape can be used as any other digital data
+ pack, for any required application.
+ Applications for this method include lowest-common-denominator software
+ distribution and reconstruction of degraded data packs so that they can
+ be used again.
+ 
+\end_layout
+
+\begin_layout Abstract
+This paper is split into two sections, the first providing an overview of
+ the format of Coleco Adam Digital Data packs, while the second provides
+ the procedure for formatting a data pack using the MAME castool.
+ The first section may be skipped if the procedure is all that is needed.
+\end_layout
+
+\begin_layout Abstract
+This represents the long tail of collaborative work across multiple projects
+ to solve a long term problem in the Adam community, and this paper would
+ not have been possible without the efforts of many.
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList figure
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList table
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset FloatList algorithm
+
+\end_inset
+
+
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+An Overview of Digital Data Packs
+\end_layout
+
+\begin_layout Standard
+Digital Data Packs are the standard data storage medium for the Coleco Adam
+ computer.
+ While the medium itself has a familiar form factor similar to audio cassettes,
+ they not only have slight mechanical differences, but they also possess
+ a block oriented formatting of header information that is spread across
+ the tape so that the data drive can find a specific unit of information
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+defined as an addressable block of 1024 bytes
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+While Coleco had told early reviewers of the Adam that the ability to format
+ data packs would be implemented in an upgrade, this never happened, and
+ likely 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+speculation
+\end_layout
+
+\end_inset
+
+ was never intended to happen.
+ With the short production lifetime of the system, there were a limited
+ number of digital data pack medium produced for the system, with many of
+ them being thrown into waste, meaning there currently exists a limited
+ number of viable media in its original form.
+\end_layout
+
+\begin_layout Standard
+To counteract this, the remaining users of the system modified existing
+ audio cassettes so that they would fit into digital data pack drives, while
+ also modifying data packs so that they could fit into audio cassette recorders.
+ Once both cassettes were modified, the original data pack is dubbed onto
+ the new modified cassette, copying the required address marks in the process.
+ This process, while effective, relies on the integrity of the original
+ donor cassette, and the effectiveness of the recorder.
+ Over time and use, the donor media will become less effective at making
+ new copies, and the generational copying effect present in dubbed copies
+ further degrades the effectiveness of the resulting copies, and the donor-copy
+ method that was devised by the Adam enthusiast community will eventually
+ be ineffective.
+\end_layout
+
+\begin_layout Standard
+This paper defines a method of creating the required waveform to be recorded
+ onto a recipient data pack that does not require a donor pack.
+ This is achieved entirely in software, and only requires a cassette recorder
+ to transfer the resulting signal onto tape.
+ The software takes as input, an image of data, and generates an audio file
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+in Microsoft WAV format
+\end_layout
+
+\end_inset
+
+ which can be recorded.
+ The software can produce data packs in either of the two possible formats
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+right and center
+\end_layout
+
+\end_inset
+
+, and the resulting pack can be used for any particular application.
+\end_layout
+
+\begin_layout Standard
+But in order to understand how this is possible, an overview of the digital
+ data pack is needed.
+\end_layout
+
+\begin_layout Section
+Physical Characteristics
+\end_layout
+
+\begin_layout Standard
+The Adam's Digital Data Packs share physical characteristics with the Philips
+ Compact Cassette.
+ In particular, the size, shape, and mechanical tolerances are compatible.
+ Because the data drive requires much faster transport of tape, the cassette
+ shell was not only made of more duable Lexan material, but the mechanical
+ tolerances of the rollers and spools are optimized for significantly less
+ wow and flutter.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Physical-Characteristics-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ is the insert that was packaged with each Coleco digital data pack, and
+ shows the enhancements that Coleco added to deal with issues such as increased
+ friction from increased speed.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename ddp-insert.png
+	lyxscale 10
+	scale 8
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Physical Characteristics of a Digital Data Pack
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Physical-Characteristics-of"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Because a traditional capstan is not used to guide the tape against the
+ tape head, additional holes are needed on the bottom of the cassette shell
+ to stabilize the tape path against the static roller and head assembly
+ on the bottom of the drive.
+ In addition, there are two additional holes on the top left and right of
+ the cassette shell on the back side of the cassette which serve to not
+ only stabilize the cassette shell in the drive, but to ensure the cassette
+ is only inserted in the front-facing manner.
+ 
+\end_layout
+
+\begin_layout Standard
+The length of first-party Digital Data Packs is roughly equivalent to 25.6
+ minutes of audio tape, meaning that an audio cassette with a side length
+ of 30 minutes of audio is ideal for use.
+\end_layout
+
+\begin_layout Subsection
+Adapting an existing audio cassette
+\end_layout
+
+\begin_layout Standard
+The process of adapting an audio cassette shell to be used as a digital
+ data pack is described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ac2ddp"
+literal "false"
+
+\end_inset
+
+ on page 4, using a dremel or a drill with the appropriately sized bit to
+ add the holes on the top and bottom of the cassette shell.
+ The process of adapting an existing DDP to act as a donor, also present
+ in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ac2ddp"
+literal "false"
+
+\end_inset
+
+ on page 3 are not needed.
+ Any suitable
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+FeO
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+
+ Type-I e.g.
+ Sony HF-60
+\end_layout
+
+\end_inset
+
+ 60 minute cassette may be modified into a data pack.
+\end_layout
+
+\begin_layout Section
+Recorded Signal Characteristics
+\end_layout
+
+\begin_layout Standard
+The pack topology is divided into two tracks, A and B, each with a very
+ wide track width.
+ The width is substantial enough to require recording the two seperate tracks
+ on the two seperate sides, reversing track B to have the correct orientation.
+\end_layout
+
+\begin_layout Standard
+The two tracks each contain a phase modulated square wave, with a nominal
+ bit cell width of 70 microseconds.
+ The presence of a transition at 31 microseconds within the bit cell indicates
+ the presence of a binary one, while the absence of this additional transition
+ represents a binary zero.
+ 
+\end_layout
+
+\begin_layout Standard
+The tape transport travels at 80 inches per second, at an approximate 15,000
+ bits per second transfer rate 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dddlisting"
+literal "false"
+
+\end_inset
+
+ page 69
+\end_layout
+
+\end_inset
+
+, with a bit density of approximately 714.3 bits per inch.
+ 
+\end_layout
+
+\begin_layout Subsection
+Block Format
+\end_layout
+
+\begin_layout Standard
+The complete format of each data block and its associated header and synchroniza
+tion bytes are described in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "castool"
+literal "false"
+
+\end_inset
+
+.
+ Each data block consists of the items in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:DDP-Block-Format"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ It is important to understand that the header containing the addressing
+ information, and the data payload are stored together in the same track,
+ but the data drive can not create the headers itself, so they must already
+ be present on the data pack.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="12" columns="2">
+<features tabularvalignment="middle">
+<column alignment="left" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+# of bytes 
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sync Byte (0x16)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Header Bytes
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+zero bytes for padding
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sync Byte (0x16)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1024
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Block Payload
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+21
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+zero bytes for padding
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sync byte (0x16)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+XOR checksum
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+zero bytes for padding
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+922
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+sync bytes (0xAA)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+zero bytes for padding
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+DDP Block Format
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DDP-Block-Format"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Header Bytes format
+\end_layout
+
+\begin_layout Standard
+The header is present in each data block, and provides not only the block
+ number, but also the pack type, and track information, so that the type
+ of pack can be determined on each and every read, to allow for spontaneous
+ insertion of different pack types, and is listed in Table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:DDP-Block-Header"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The two pack formats for Right and Center directory are defined entirely
+ in this header.
+ 
+\end_layout
+
+\begin_layout Standard
+The header ID determines the pack type.
+ The letters 'G' 'W' indicate that the pack is a right-directory pack, with
+ blocks allocated sequentially starting from the beginning of the pack being
+ block 0, and the end of the pack being block 255.
+ This format is used by the Super Game tapes such as 
+\begin_inset Quotes eld
+\end_inset
+
+Buck Rogers: Planet of Zoom.
+\begin_inset Quotes erd
+\end_inset
+
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:GW-Right-Directory"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Conversely, the letters 'H' 'E' indicate that the tape has block 0 in the
+ middle of the tape, with blocks going across the tape from that point,
+ and wrapping back around to the middle.
+ This format was used in the SmartBASIC, productivity programs, and blank
+ data packs because it placed the directory block
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+block number 1
+\end_layout
+
+\end_inset
+
+ equidistant in the middle of the pack.
+ See Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:HE-Center-Directory"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+               <-- TAPE MOTION (block #s in hex)
+\end_layout
+
+\begin_layout Plain Layout
+
+               0              40            7F 
+\end_layout
+
+\begin_layout Plain Layout
+
+               =============================== 
+\end_layout
+
+\begin_layout Plain Layout
+
+               80             C0            FF 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+GW Right Directory Block Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:GW-Right-Directory"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+               <-- TAPE MOTION (block #s in hex)
+\end_layout
+
+\begin_layout Plain Layout
+
+               40          7F 0             3F 
+\end_layout
+
+\begin_layout Plain Layout
+
+               =============================== 
+\end_layout
+
+\begin_layout Plain Layout
+
+               80          BF C0            FF 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+HE Center Directory Block Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:HE-Center-Directory"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Tabular
+<lyxtabular version="3" rows="6" columns="2">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="left" valignment="top">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+# of bytes
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Description
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Header ID 'G' 'W' for Right Directory, 'H' 'E' for Center Directory
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Block Number
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+!NOT Block Number
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Total Number of Blocks in Track
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="left" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+XOR checksum of above
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+DDP Block Header Format
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:DDP-Block-Header"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Two bytes are reserved for the block number.
+ While this does mean that up to 65535 possible blocks could be placed on
+ a data pack, were there enough physical tape, in practice only 256 total
+ blocks are defined, so the second byte is empty.
+ Since the data drive is controlled by a 6801
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dddlisting"
+literal "false"
+
+\end_inset
+
+, the byte order is big-endian for any block numbers.
+\end_layout
+
+\begin_layout Standard
+An XORed copy of the block number is placed next, and is done such that
+ adding the block and !NOT block numbers together should sum to zero.
+\end_layout
+
+\begin_layout Standard
+This is followed by a single byte indicating the total number of blocks
+ in a given track, and is subtracted against the total # of blocks to determine
+ if a block is on track A or B, by the data drive firmware.
+\end_layout
+
+\begin_layout Standard
+Finally, a one byte ones-complement checksum, the same as used by AdamNet
+\begin_inset CommandInset citation
+LatexCommand cite
+key "adamnet"
+literal "false"
+
+\end_inset
+
+ for each of its packets, is placed at the end of the header.
+\end_layout
+
+\begin_layout Subsection
+Track Topology
+\end_layout
+
+\begin_layout Standard
+Each of the 256 possible blocks is assigned onto one of two possible tracks,
+ A or B, with each track containing 128 blocks.
+ The beginning of each track has approximately 2,753 leading zeroes to act
+ both as padding and synchronization to find the beginning of a data track.
+\end_layout
+
+\begin_layout Subsection
+Tape layouts and block numbering
+\end_layout
+
+\begin_layout Standard
+The different tape layouts all sequentially number the blocks in exactly
+ the same way, with block 0 being at the beginning of the tape, and block
+ 255 being at the end of the tape.
+ The difference lies in not only the block header (HE vs GW), but also the
+ fact that the tape firmware has an additional subroutine called MANGLE_NUM
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "dddlisting"
+literal "false"
+
+\end_inset
+
+ page 70
+\end_layout
+
+\end_inset
+
+ which divides the total number of blocks in half, adds that to the current
+ block number, and throws away the carry, causing the value to wrap back
+ around to zero.
+ See the listing for Algorithm 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "alg:MANGLE_NUM"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float algorithm
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+MANGLE_NUM
+\end_layout
+
+\begin_layout Plain Layout
+
+       TST    TAPE_TYPE_,D   ; SEE WHERE THE DIRECTORY IS -
+\end_layout
+
+\begin_layout Plain Layout
+
+       BEQ    MANGL_END      ; AT BEGINNING, GO AWAY
+\end_layout
+
+\begin_layout Plain Layout
+
+       LDD    BLOCKS_TRACK,D 
+\end_layout
+
+\begin_layout Plain Layout
+
+       LSRD                  ; DIVIDE BY 2
+\end_layout
+
+\begin_layout Plain Layout
+
+       ADDD   WANTED_BLOCK,D
+\end_layout
+
+\begin_layout Plain Layout
+
+       STD    WANTED_BLOCK,D ; SAVE IN CASE WE'RE DONE
+\end_layout
+
+\begin_layout Plain Layout
+
+       SUBD   BLOCKS_TRACK,D ; HAVE WE REQUESTED A NON-EXISTANT BLOCK?
+\end_layout
+
+\begin_layout Plain Layout
+
+       BHS    MANGL_HI
+\end_layout
+
+\begin_layout Plain Layout
+
+       RTS                   ; WE'RE OK, JUST RETURN
+\end_layout
+
+\begin_layout Plain Layout
+
+MANGL_HI
+\end_layout
+
+\begin_layout Plain Layout
+
+       LDD    WANTED_BLOCK,D ; SUBTRACT BLOCKS_TRACK TO OFFSET BACK
+\end_layout
+
+\begin_layout Plain Layout
+
+       SUBD   BLOCKS_TRACK,D
+\end_layout
+
+\begin_layout Plain Layout
+
+       STD    WANTED_BLOCK,D ; I HOPE YOU'RE HAPPY NOW, BOZO
+\end_layout
+
+\begin_layout Plain Layout
+
+MANGL_END
+\end_layout
+
+\begin_layout Plain Layout
+
+       RTS
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MANGLE_NUM
+\begin_inset CommandInset label
+LatexCommand label
+name "alg:MANGLE_NUM"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Signal level considerations
+\end_layout
+
+\begin_layout Standard
+To best match the signal level emitted by the data drive when writing data
+ payload, the sample level for both tracks is set to -12 decibels 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "castool"
+literal "false"
+
+\end_inset
+
+ and is static for the duration of the recording.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Part
+Data Pack Formatting Procedure
+\end_layout
+
+\begin_layout Standard
+Formatting a data pack, while not trivial, is a straightforward procedure.
+ It involves creating or using a source data pack image, with each of the
+ 256 blocks sequentially placed in a file.
+ This is known as .ddp format in the Coleco Adam community, and you can use
+ any of the data pack image files present on sites such as the Adam Archive
+\begin_inset CommandInset citation
+LatexCommand cite
+key "adamarchive"
+literal "false"
+
+\end_inset
+
+ as the source material for creating the signal file.
+ Once the signal file is sourced, the 'castool
+\begin_inset CommandInset citation
+LatexCommand cite
+key "castool"
+literal "false"
+
+\end_inset
+
+' present in MAME can be used to generate the initial signal file.
+ An audio editing tool such as 'Audacity
+\begin_inset CommandInset citation
+LatexCommand cite
+key "audacity"
+literal "false"
+
+\end_inset
+
+' can then be used to do necessary edits before finally using a device such
+ as a USB enabled cassette recorder
+\begin_inset CommandInset citation
+LatexCommand cite
+key "amazon"
+literal "false"
+
+\end_inset
+
+ to transfer the data tracks onto a suitable cassette 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ac2ddp"
+literal "false"
+
+\end_inset
+
+ page 6
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Shadowbox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+Linux is used in the examples.
+ It is assumed that mame installed via your package manager, or placed somewhere
+ within your search path.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Requirements
+\end_layout
+
+\begin_layout Standard
+The requirements to perform the procedure are:
+\end_layout
+
+\begin_layout Itemize
+Windows, Mac or Linux.
+ Linux is shown here in this procedure
+\end_layout
+
+\begin_layout Itemize
+The ability to compile C or C++ code.
+ Windows can use the MAME windows binaries
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mame"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+A copy of MAME
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mame"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+An audio editing program, such as Audacity
+\begin_inset CommandInset citation
+LatexCommand cite
+key "audacity"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+A suitable cassette recording device
+\begin_inset CommandInset citation
+LatexCommand cite
+key "amazon"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+A dremel or drill with a 5/32 drill bit as specified in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ac2ddp"
+literal "false"
+
+\end_inset
+
+ page 4.
+\end_layout
+
+\begin_layout Itemize
+A source DDP image, or a program to create an empty one, such as 'dd' in
+ Linux.
+\end_layout
+
+\begin_layout Itemize
+A blank USB stick large enough to hold the generated audio files from castool.
+\end_layout
+
+\begin_layout Section
+Modifying an Audio Cassette
+\end_layout
+
+\begin_layout Standard
+Starting with a suitable 60 minute audio cassette, 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+e.g.
+ Sony HF-60
+\end_layout
+
+\end_inset
+
+ drill out the required two holes on the back side of the tape, as specified
+ in 
+\begin_inset Quotes eld
+\end_inset
+
+Audio Cassette Tape to a Adam DDP Pack!!
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ac2ddp"
+literal "false"
+
+\end_inset
+
+ on page 4.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Verify that the newly drilled cassette will fit in your data pack drive,
+ before proceeding.
+\end_layout
+
+\begin_layout Section
+Preparing the source image
+\end_layout
+
+\begin_layout Standard
+A DDP image is required.
+ At a minimum a file containing all zeroes for 262,144 bytes is sufficient,
+ and can be created with the following command:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ dd if=/dev/zero of=blank.ddp bs=1024 count=256
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Shadowbox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+On Windows, Programs such as Adam Image Manager, which is available on the
+ Adam Archive
+\begin_inset CommandInset citation
+LatexCommand cite
+key "adamarchive"
+literal "false"
+
+\end_inset
+
+ can be used instead.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Generating the audio signal file
+\end_layout
+
+\begin_layout Standard
+With the source image in hand, the castool
+\begin_inset CommandInset citation
+LatexCommand cite
+key "castool"
+literal "false"
+
+\end_inset
+
+ from MAME
+\begin_inset CommandInset citation
+LatexCommand cite
+key "mame"
+literal "false"
+
+\end_inset
+
+ can be used to generate the resulting audio signal file in WAV format,
+ with the following command:
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ castool convert ddp blank.ddp blank.wav
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Shadowbox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+By default, castool will generate a center-directory audio image, with block
+ 0 being in the middle of the data pack.
+ Should you wish to generate a right-directory audio image, with block 0
+ being at the beginning of the tape, you will need to obtain the source
+ code to mame, and modify lib/src/formats/adam_cas.cpp on line 137 from:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+int layout_type = TYPE_HE;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+to:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+int layout_type = TYPE_GW;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+and subsequently recompile mame with
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset listings
+inline false
+status open
+
+\begin_layout Plain Layout
+
+$ make
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Editing the audio signal file to fit on tape
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ddp-audacity.png
+	lyxscale 20
+	scale 20
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Imported audio signal file
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Imported-audio-signal"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The audio signal file, as it currently exists fresh out of castool, is formatted
+ as a stereo audio file approximately 25.6 minutes long.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Imported-audio-signal"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ shows the zoomed out waveform as it exists when imported into Audacity.
+ It needs to be split into two seperate mono files and silence added to
+ both ends of the file.
+ In addition, the audio file for the second track must be reversed so that
+ it is in the correct orientation for the data drive's abnormally wide playback
+ head, with the following procedure:
+\end_layout
+
+\begin_layout Enumerate
+In the File menu, select Import > Audio\SpecialChar ldots
+
+\end_layout
+
+\begin_layout Enumerate
+Find and select blank.wav to open.
+\end_layout
+
+\begin_layout Enumerate
+Once open, split the stereo file, into mono using the track menu, see Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Splitting-from-Stereo"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Click on the first track inside the waveform window.
+ Then press Shift-Home to skip to beginning
+\end_layout
+
+\begin_layout Enumerate
+From the Generate menu, select Silence\SpecialChar ldots
+ Specify 20 seconds.
+ This will add the appropriate delay to pass the initial leader, and enough
+ slew to allow the data drive to properly sense the beginning of the track.
+\end_layout
+
+\begin_layout Enumerate
+Press Shift-End to skip to the end of the first track.
+\end_layout
+
+\begin_layout Enumerate
+Repeat Generate > Silence\SpecialChar ldots
+, and this time specify 6 minutes.
+ This will add the appropriate padding to the end of the tape to fill out
+ the 30 minutes.
+\end_layout
+
+\begin_layout Enumerate
+Repeat steps 4-8 with the second track.
+\end_layout
+
+\begin_layout Enumerate
+Press the Select button on the second track.
+ See Figure X.
+ This will select the entirety of track B.
+\end_layout
+
+\begin_layout Enumerate
+In the Effect menu, select Special > Reverse.
+ This will reverse the audio signal, and the second track, should be in
+ the opposite orientation of the first.
+\end_layout
+
+\begin_layout Enumerate
+Press the Select button of the first track.
+\end_layout
+
+\begin_layout Enumerate
+From the File menu, select Export > Export Selected Audio
+\end_layout
+
+\begin_layout Enumerate
+Ensure that the file format is 16-bit WAV, it should be, by default.
+\end_layout
+
+\begin_layout Enumerate
+Save the file as track_a.wav.
+\end_layout
+
+\begin_layout Enumerate
+Repeat steps 9 to 14, saving the resulting file as track_b.wav
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ddp-split-track.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Splitting from Stereo to Mono
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Splitting-from-Stereo"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ddp-select-channel.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Selecting all audio on a track
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The resulting image files are ready for recording, and can be loaded individuall
+y back into Audacity to verify, before recording.
+ Verify that the correct amount of silence (20 seconds and 6 minutes) is
+ present, and that it is reversed on track B.
+ 
+\end_layout
+
+\begin_layout Standard
+The audio files track_a.wav and track_b.wav should now be readied to be recorded.
+ If the USB enabled recorder is used as cited, the track_a.wav and track_b.wav
+ files will be placed and recorded onto the recipient tape, one at a time.
+\end_layout
+
+\begin_layout Section
+Recording the Audio Signal
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Shadowbox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+use_makebox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+thickness "0.4pt"
+separation "3pt"
+shadowsize "4pt"
+framecolor "black"
+backgroundcolor "none"
+status open
+
+\begin_layout Plain Layout
+The following procedure assumes that the cited QFX USB enabled tape recorder
+ is being used.
+ If another recorder is used, the instructions must be adjusted accordingly.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Ensure that the cassette recorder is plugged in, and switch is in the OFF
+ position.
+ Ensure that the volume knob is above 0.
+ It does not matter where, as it is only monitoring the signal and not affecting
+ how it is recorded.
+\end_layout
+
+\begin_layout Enumerate
+Copy track_a.wav onto the USB stick.
+\end_layout
+
+\begin_layout Enumerate
+Unmount the USB stick.
+\end_layout
+
+\begin_layout Enumerate
+Slide the cassette into the recorder, side A up.
+ Rewind to the beginning if necessary.
+\end_layout
+
+\begin_layout Enumerate
+Place the USB stick into the USB port on the cassette recorder.
+\end_layout
+
+\begin_layout Enumerate
+Press the record and play buttons to arm it for recording.
+\end_layout
+
+\begin_layout Enumerate
+Slide the recorder switch into the USB position.
+ POWER should light, and the cassette transport should be moving.
+ After approximately 30 seconds, the digital audio signal for the tape formattin
+g should be heard.
+\end_layout
+
+\begin_layout Enumerate
+The process of recording side A should take approximately 30 minutes, and
+ the recorder will automatically stop.
+\end_layout
+
+\begin_layout Enumerate
+Slide the power switch to OFF.
+\end_layout
+
+\begin_layout Enumerate
+Remove the USB stick and place back in computer.
+\end_layout
+
+\begin_layout Enumerate
+Delete track_a.wav from the USB stick, and replace with track_b.wav
+\end_layout
+
+\begin_layout Enumerate
+Repeat steps 3 to 9, for side B.
+\end_layout
+
+\begin_layout Standard
+The cassette is now ready to be used as a digital data pack.
+ If you followed the instructions for a blank image, the data pack will
+ need to be formatted e.g.
+ using SmartBASIC or AJM File Manager, or a utility like Coleco TAPEUTL
+ should be used to copy the image of a super game onto the data pack.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage pagebreak
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "formatting-digital-data-packs"
+options "bibtotoc,plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
